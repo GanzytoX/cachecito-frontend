@@ -5,7 +5,7 @@ import { mockChats } from "./data"
 export function MessagesView() {
   return (
     <div className="flex flex-1 flex-col overflow-y-auto">
-      <header className="sticky top-0 z-10 bg-background/50 px-6 py-6 backdrop-blur-3xl border-b border-white/5">
+      <header className="sticky top-0 z-10 bg-background/50 px-6 py-6 backdrop-blur-3xl border-b border-border">
         <h1 className="text-foreground/90">Messages</h1>
         <div className="relative mt-4 group">
           <IconSearch className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/60 transition-colors group-focus-within:text-primary z-10" />

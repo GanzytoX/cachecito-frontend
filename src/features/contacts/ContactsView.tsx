@@ -20,7 +20,7 @@ const sortedLetters = Object.keys(grouped).sort()
 export function ContactsView() {
   return (
     <div className="flex flex-1 flex-col overflow-y-auto">
-      <header className="sticky top-0 z-10 bg-background/50 px-6 py-6 backdrop-blur-3xl border-b border-white/5">
+      <header className="sticky top-0 z-10 bg-background/50 px-6 py-6 backdrop-blur-3xl border-b border-border">
         <div className="flex items-center justify-between">
           <h1 className="text-foreground/90">Contacts</h1>
           <Button

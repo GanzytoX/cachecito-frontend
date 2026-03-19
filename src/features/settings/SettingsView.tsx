@@ -7,7 +7,7 @@ export function SettingsView() {
     <div className="flex flex-1 flex-col overflow-y-auto">
       <div className="flex flex-col gap-6 px-6 pt-8 pb-52">
         {/* Profile Card */}
-        <button className="group flex items-center gap-4 rounded-2xl border border-white/10 bg-card/60 p-5 text-left backdrop-blur-2xl transition-all active:scale-[0.98]">
+        <button className="group flex items-center gap-4 rounded-2xl border border-border bg-card/60 p-5 text-left backdrop-blur-2xl transition-all active:scale-[0.98]">
           <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary ring-1 ring-primary/20">
             <span className="text-lg font-bold tracking-tight">JG</span>
           </div>
@@ -31,11 +31,11 @@ export function SettingsView() {
             <span className="px-1 text-[11px] font-semibold tracking-[0.15em] text-muted-foreground/35 uppercase">
               {section.section}
             </span>
-            <div className="flex flex-col overflow-hidden rounded-xl border border-white/10 bg-card/40 backdrop-blur-2xl">
+            <div className="flex flex-col overflow-hidden rounded-xl border border-border bg-card/40 backdrop-blur-2xl">
               {section.items.map((item, index) => (
                 <div key={item.id}>
-                  {index > 0 && <div className="mx-17 h-px bg-white/5" />}
-                  <button className="group flex w-full items-center gap-4 px-4 py-3.5 text-left transition-colors active:bg-white/5">
+                  {index > 0 && <div className="mx-17 h-px bg-border/50" />}
+                  <button className="group flex w-full items-center gap-4 px-4 py-3.5 text-left transition-colors hover:bg-black/5 dark:hover:bg-white/5 active:bg-black/10 dark:active:bg-white/10">
                     <div
                       className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${item.iconBg} ${item.iconColor} transition-transform duration-200 group-active:scale-95`}
                     >

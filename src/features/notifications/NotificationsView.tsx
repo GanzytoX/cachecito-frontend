@@ -44,7 +44,7 @@ export function NotificationsView() {
 
   return (
     <div className="flex flex-1 flex-col overflow-y-auto">
-      <header className="sticky top-0 z-10 bg-background/50 px-6 py-6 backdrop-blur-3xl border-b border-white/5">
+      <header className="sticky top-0 z-10 bg-background/50 px-6 py-6 backdrop-blur-3xl border-b border-border">
         <div className="flex items-center justify-between">
           <h1 className="text-foreground/90">Activity</h1>
           <Button
@@ -57,7 +57,7 @@ export function NotificationsView() {
         </div>
 
         <Tabs defaultValue="All" className="mt-6">
-          <TabsList className="grid w-full grid-cols-2 rounded-2xl bg-card backdrop-blur-3xl h-12 p-1 border border-white/10 shadow-sm">
+          <TabsList className="grid w-full grid-cols-2 rounded-2xl bg-card backdrop-blur-3xl h-12 p-1 border border-border shadow-sm">
             <TabsTrigger
               value="All"
               className="rounded-xl font-bold text-[11px] uppercase tracking-wider data-[state=active]:bg-white/90 dark:data-[state=active]:bg-white/10 data-[state=active]:text-primary data-[state=active]:shadow-sm transition-all duration-300"
