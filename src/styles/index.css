@@ -41,6 +41,10 @@
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
+
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
 }
 
 @layer base {
@@ -64,12 +68,17 @@
     --border: hsl(28 15% 85% / 0.4);
     --input: hsl(28 15% 85% / 0.4);
     --ring: hsl(25 30% 45%);
-    --radius: 0.75rem; /* Slightly larger but still refined "small" */
+    --radius: 0.75rem;
+
+    /* Semantic colors */
+    --success: hsl(142 76% 36%);
+    --warning: hsl(38 92% 50%);
+    --info: hsl(199 89% 48%);
     
     background: var(--background);
     background-image: 
-      radial-gradient(at 0% 0%, hsla(25, 30%, 45%, 0.12) 0px, transparent 50%),
-      radial-gradient(at 100% 100%, hsla(28, 20%, 60%, 0.12) 0px, transparent 50%);
+      radial-gradient(at 0% 0%, hsla(25, 30%, 45%, 0.08) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, hsla(28, 20%, 60%, 0.08) 0px, transparent 50%);
     background-attachment: fixed;
   }
 
@@ -94,10 +103,15 @@
     --input: hsl(28 10% 20% / 0.4);
     --ring: hsl(25 25% 60%);
 
+    /* Semantic colors - Dark mode */
+    --success: hsl(142 70% 45%);
+    --warning: hsl(38 92% 60%);
+    --info: hsl(199 89% 60%);
+
     background: var(--background);
     background-image: 
-      radial-gradient(at 0% 0%, hsla(25, 25%, 60%, 0.1) 0px, transparent 50%),
-      radial-gradient(at 100% 100%, hsla(28, 10%, 20%, 0.1) 0px, transparent 50%);
+      radial-gradient(at 0% 0%, hsla(25, 25%, 60%, 0.05) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, hsla(28, 10%, 20%, 0.05) 0px, transparent 50%);
     background-attachment: fixed;
   }
 }
@@ -117,7 +131,11 @@
 }
 
 .glass-nav {
-  @apply fixed bottom-8 left-1/2 -translate-x-1/2 w-[calc(100%-3rem)] max-w-md z-50 bg-white/70 dark:bg-background/40 backdrop-blur-3xl border border-white/40 dark:border-white/10 rounded-4xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] pb-[env(safe-area-inset-bottom)];
+  @apply fixed bottom-8 left-1/2 -translate-x-1/2 w-[calc(100%-2.5rem)] max-w-md z-50 bg-white/70 dark:bg-background/40 backdrop-blur-3xl border border-white/40 dark:border-white/10 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] pb-[env(safe-area-inset-bottom)] ring-1 ring-black/5;
+}
+
+.page-container {
+  @apply flex flex-col gap-1 pb-52 px-3;
 }
 
 /* Refined typography */
