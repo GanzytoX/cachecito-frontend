@@ -13,16 +13,16 @@ export const settingsMenuItems: SettingsSection[] = [
     items: [
       {
         id: "notifications",
-        label: "Notificaciones",
-        description: "Alertas y sonidos",
+        label: "Notifications",
+        description: "Alerts and sound effects",
         icon: IconBell,
         iconColor: "text-primary",
         iconBg: "bg-primary/10",
       },
       {
         id: "appearance",
-        label: "Apariencia",
-        description: "Tema y personalización",
+        label: "Appearance",
+        description: "Themes and customization",
         icon: IconPalette,
         iconColor: "text-primary/70",
         iconBg: "bg-primary/8",
@@ -30,20 +30,20 @@ export const settingsMenuItems: SettingsSection[] = [
     ],
   },
   {
-    section: "Privacidad",
+    section: "Privacy",
     items: [
       {
         id: "privacy",
-        label: "Privacidad y Seguridad",
-        description: "Contraseña y datos",
+        label: "Privacy & Security",
+        description: "Passwords and biometric data",
         icon: IconLock,
         iconColor: "text-primary/80",
         iconBg: "bg-primary/10",
       },
       {
         id: "permissions",
-        label: "Permisos",
-        description: "Accesos de la app",
+        label: "Permissions",
+        description: "App access and tracking",
         icon: IconShieldCheck,
         iconColor: "text-primary/60",
         iconBg: "bg-primary/8",
@@ -51,12 +51,12 @@ export const settingsMenuItems: SettingsSection[] = [
     ],
   },
   {
-    section: "Soporte",
+    section: "Support",
     items: [
       {
         id: "help",
-        label: "Ayuda",
-        description: "Centro de ayuda y FAQ",
+        label: "Help Center",
+        description: "FAQs and technical support",
         icon: IconHelpCircle,
         iconColor: "text-muted-foreground/50",
         iconBg: "bg-muted/50",
