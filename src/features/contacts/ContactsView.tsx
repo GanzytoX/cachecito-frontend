@@ -28,7 +28,7 @@ export function ContactsView() {
         actionIcon={IconUserPlus}
       />
 
-      <div className="page-container mt-4">
+      <div className="page-container mt-2">
         {mockContacts.length > 0 ? (
           <div className="flex flex-col gap-6">
             {sortedLetters.map((letter) => (

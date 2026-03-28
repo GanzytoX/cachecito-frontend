@@ -10,9 +10,9 @@ export function SettingsView() {
     <div className="flex flex-1 flex-col overflow-y-auto">
       <PageHeader title="Settings" />
 
-      <div className="page-container mt-6">
+      <div className="page-container mt-2">
         {/* Profile Card */}
-        <div className="flex flex-col overflow-hidden rounded-2xl border border-border/50 bg-card/40 backdrop-blur-3xl shadow-sm">
+        <div className="flex flex-col overflow-hidden rounded-2xl border border-border/50 bg-card/40 backdrop-blur-2xl shadow-sm">
           <ListTile
             title="Joaquín Gamboa"
             subtitle="joaquin@cachecito.app"
@@ -24,9 +24,9 @@ export function SettingsView() {
 
         {/* Menu Sections */}
         {settingsMenuItems.map((section) => (
-          <div key={section.section} className="flex flex-col gap-2.5">
-            <SectionHeader label={section.section} className="px-1" />
-            <div className="flex flex-col overflow-hidden rounded-2xl border border-border/50 bg-card/40 backdrop-blur-3xl shadow-sm">
+          <div key={section.section} className="flex flex-col gap-2 mt-3">
+            <SectionHeader label={section.section} />
+            <div className="flex flex-col overflow-hidden rounded-2xl border border-border/50 bg-card/40 backdrop-blur-2xl shadow-sm">
               {section.items.map((item, index) => (
                 <div key={item.id}>
                   {index > 0 && <div className="mx-4 h-px bg-border/40" />}
