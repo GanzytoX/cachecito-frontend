@@ -3,9 +3,9 @@ import { createRoot } from "react-dom/client"
 import { BrowserRouter } from "react-router-dom"
 
 import "@fontsource-variable/inter/index.css"
-import "./styles/index.css"
+import "@/app/styles/index.css"
 import { App } from "./App"
-import { ThemeProvider } from "@/components/layout/theme-provider"
+import { ThemeProvider } from "@/app/providers/theme-provider"
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

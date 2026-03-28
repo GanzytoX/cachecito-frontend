@@ -1,10 +1,10 @@
 import { Routes, Route, Navigate, useLocation } from "react-router-dom"
-import { MessagesView } from "@/features/messages/MessagesView"
-import { ChatView } from "@/features/messages/ChatView"
-import { ContactsView } from "@/features/contacts/ContactsView"
-import { NotificationsView } from "@/features/notifications/NotificationsView"
-import { SettingsView } from "@/features/settings/SettingsView"
-import { BottomNav } from "@/components/layout/bottom-nav"
+import { MessagesPage } from "@/pages/messages/MessagesPage"
+import { ChatPage } from "@/pages/messages/ChatPage"
+import { ContactsPage } from "@/pages/contacts/ContactsPage"
+import { NotificationsPage } from "@/pages/notifications/NotificationsPage"
+import { SettingsPage } from "@/pages/settings/SettingsPage"
+import { BottomNav } from "@/widgets/bottom-nav"
 
 export function App() {
   const location = useLocation()
@@ -16,11 +16,11 @@ export function App() {
       <div className="flex flex-1 flex-col overflow-hidden">
         <Routes>
           <Route path="/" element={<Navigate to="/messages" replace />} />
-          <Route path="/messages" element={<MessagesView />} />
-          <Route path="/messages/:chatId" element={<ChatView />} />
-          <Route path="/contacts" element={<ContactsView />} />
-          <Route path="/notifications" element={<NotificationsView />} />
-          <Route path="/settings" element={<SettingsView />} />
+          <Route path="/messages" element={<MessagesPage />} />
+          <Route path="/messages/:chatId" element={<ChatPage />} />
+          <Route path="/contacts" element={<ContactsPage />} />
+          <Route path="/notifications" element={<NotificationsPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
         </Routes>
       </div>
 
