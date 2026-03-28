@@ -7,3 +7,11 @@ export interface Chat {
   unread: number
   online: boolean
 }
+
+export interface Message {
+  id: string
+  chatId: string
+  text: string
+  time: string
+  fromMe: boolean
+}

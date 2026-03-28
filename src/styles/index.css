@@ -127,11 +127,11 @@
 
 /* Modern minimalist glass utilities */
 .glass-surface {
-  @apply bg-card backdrop-blur-3xl border border-white/40 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.06)];
+  @apply bg-card backdrop-blur-2xl border border-foreground/10 shadow-[0_8px_32px_rgba(0,0,0,0.06)];
 }
 
 .glass-nav {
-  @apply fixed bottom-8 left-1/2 -translate-x-1/2 w-[calc(100%-2.5rem)] max-w-md z-50 bg-white/70 dark:bg-background/40 backdrop-blur-3xl border border-white/40 dark:border-white/10 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] pb-[env(safe-area-inset-bottom)] ring-1 ring-black/5;
+  @apply fixed bottom-8 left-1/2 -translate-x-1/2 w-[calc(100%-2.5rem)] max-w-md z-50 bg-card/70 backdrop-blur-2xl border border-foreground/10 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] pb-[env(safe-area-inset-bottom)];
 }
 
 .page-container {
@@ -141,4 +141,20 @@
 /* Refined typography */
 h1 {
   @apply text-3xl font-bold tracking-tight;
+}
+
+/* Chat wallpaper pattern */
+.chat-pattern {
+  background-color: var(--background);
+  background-image:
+    radial-gradient(hsl(25 30% 45% / 0.15) 1.2px, transparent 1.2px),
+    radial-gradient(hsl(25 30% 45% / 0.08) 1px, transparent 1px);
+  background-size: 20px 20px, 10px 10px;
+  background-position: 0 0, 10px 10px;
+}
+
+.dark .chat-pattern {
+  background-image:
+    radial-gradient(hsl(25 25% 60% / 0.18) 1.2px, transparent 1.2px),
+    radial-gradient(hsl(25 25% 60% / 0.10) 1px, transparent 1px);
 }
