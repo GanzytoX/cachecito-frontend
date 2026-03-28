@@ -31,19 +31,19 @@ export function BottomNav() {
                 "relative mx-1 flex h-12 flex-1 items-center justify-center rounded-2xl transition-all duration-300 outline-none",
                 isActive
                   ? "bg-primary/10 text-primary shadow-[0_0_20px_rgba(var(--primary),0.05)]"
-                  : "text-muted-foreground/40 hover:bg-white/5 hover:text-foreground/70"
+                  : "text-muted-foreground/40 hover:bg-foreground/5 hover:text-foreground/70"
               )}
             >
               <item.icon
-                size={24}
+                size={22}
                 stroke={isActive ? 2.2 : 1.5}
                 className={cn(
                   "transition-all duration-300",
-                  isActive && "scale-110"
+                  isActive && "scale-110 -translate-y-1"
                 )}
               />
               {isActive && (
-                <span className="absolute bottom-1.5 h-1 w-1 rounded-full bg-primary" />
+                <div className="absolute bottom-2 h-[2.2px] w-[14px] rounded-full bg-primary" />
               )}
             </button>
           )
