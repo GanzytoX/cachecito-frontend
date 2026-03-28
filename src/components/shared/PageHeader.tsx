@@ -25,7 +25,7 @@ export function PageHeader({
   className,
 }: PageHeaderProps) {
   return (
-    <header className={cn("sticky top-0 z-10 bg-background/50 px-6 py-6 backdrop-blur-3xl border-b border-border transition-all duration-300", className)}>
+    <header className={cn("sticky top-0 z-10 bg-background/50 px-6 py-6 backdrop-blur-2xl border-b border-border transition-all duration-300", className)}>
       <div className="flex items-center justify-between">
         <h1 className="text-foreground/90">{title}</h1>
         {ActionIcon && (

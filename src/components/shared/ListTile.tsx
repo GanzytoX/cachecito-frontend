@@ -44,7 +44,7 @@ export function ListTile({
         "group flex w-full gap-4 rounded-xl px-3 py-3.5 text-left transition-all active:scale-[0.98]",
         variant === "settings" ? "items-center" : "items-start",
         unread && variant === "notification" && "bg-primary/5",
-        "active:bg-primary/5 hover:bg-white/5 dark:hover:bg-white/5",
+        "active:bg-primary/5 hover:bg-foreground/5",
         className
       )}
     >
@@ -53,7 +53,7 @@ export function ListTile({
         initials ? (
           <Avatar initials={initials} online={online} size={variant === "settings" ? "lg" : "md"} />
         ) : Icon ? (
-          <div className={cn("mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg shadow-sm border border-white/10", iconBg, iconColor)}>
+          <div className={cn("mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg shadow-sm border border-foreground/10", iconBg, iconColor)}>
             <Icon size={19} stroke={1.6} />
           </div>
         ) : null
