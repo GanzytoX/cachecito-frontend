@@ -1,9 +1,6 @@
 import { cn } from "@/shared/lib/utils"
 
-interface SectionHeaderProps {
-  label: string
-  className?: string
-}
+import type { SectionHeaderProps } from "./SectionHeader.types"
 
 export function SectionHeader({ label, className }: SectionHeaderProps) {
   return (

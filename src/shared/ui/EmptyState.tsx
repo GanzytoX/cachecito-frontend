@@ -1,12 +1,6 @@
 import { cn } from "@/shared/lib/utils"
-import type { TablerIcon } from "@tabler/icons-react"
 
-interface EmptyStateProps {
-  icon: TablerIcon
-  title: string
-  description?: string
-  className?: string
-}
+import type { EmptyStateProps } from "./EmptyState.types"
 
 export function EmptyState({
   icon: Icon,

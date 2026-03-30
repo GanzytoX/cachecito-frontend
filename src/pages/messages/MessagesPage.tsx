@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { IconMessageOff, IconEdit } from "@tabler/icons-react"
 import { PageHeader } from "@/shared/ui/PageHeader"
 import { ListTile } from "@/shared/ui/ListTile"
@@ -9,24 +9,17 @@ import type { Chat } from "@/entities/message/model/types"
 
 export function MessagesPage() {
   const navigate = useNavigate()
-  const [chats, setChats] = useState<Chat[]>([])
-
-  useEffect(() => {
-    // Load chats from storage
+  const [chats] = useState<Chat[]>(() => {
     const storedChats = storage.getChats()
-    
-    // Cleanup: Ensure the list only shows chats with at least one user message
     const validChats = storedChats.filter(c => {
       const msgs = storage.getMessages(c.id)
       return msgs.some(m => m.fromMe)
     })
-    
-    setChats(validChats)
-    
     if (validChats.length !== storedChats.length) {
       localStorage.setItem("cachecito_chats", JSON.stringify(validChats))
     }
-  }, [])
+    return validChats
+  })
 
   const handleNewChat = () => {
     const threadId = `agent-${Date.now()}`

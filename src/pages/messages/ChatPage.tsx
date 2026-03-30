@@ -95,11 +95,11 @@ export function ChatPage() {
           fromMe: false
         }
         setMessages(prev => [...prev, agentMsg])
-      } catch (error: any) {
+      } catch (error) {
         const errorMsg: Message = {
           id: (Date.now() + 1).toString(),
           chatId: chatId!,
-          text: error.message || "Connection error.",
+          text: error instanceof Error ? error.message : "Connection error.",
           time: "Now",
           fromMe: false
         }

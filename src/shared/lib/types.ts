@@ -15,7 +15,7 @@ export interface Conversation {
   initiatorId: number;
   receiverId: number;
   status: 'OPEN' | 'CLOSED' | 'AGREED';
-  history: any[]; // Array de objetos JSON (lo que negocia la IA)
+  history: unknown[]; // Array de objetos JSON (lo que negocia la IA)
   createdAt: string;
 }
 
@@ -31,5 +31,5 @@ export interface User {
 export interface RequestResponse {
   // Define this based on what the API actually returns
   // For now, an opaque object that includes the proposal
-  [key: string]: any;
+  [key: string]: unknown;
 }

@@ -1,18 +1,9 @@
 import { cn } from "@/shared/lib/utils"
-import { IconSearch, type TablerIcon } from "@tabler/icons-react"
+import { IconSearch } from "@tabler/icons-react"
 import { Input } from "@/shared/ui/shadcn/input"
 import { Button } from "@/shared/ui/shadcn/button"
 
-interface PageHeaderProps {
-  title: string
-  searchPlaceholder?: string
-  searchValue?: string
-  onSearchChange?: (value: string) => void
-  actionIcon?: TablerIcon
-  onActionClick?: () => void
-  children?: React.ReactNode
-  className?: string
-}
+import type { PageHeaderProps } from "./PageHeader.types"
 
 export function PageHeader({
   title,

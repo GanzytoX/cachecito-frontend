@@ -1,11 +1,6 @@
 import { cn } from "@/shared/lib/utils"
 
-interface AvatarProps {
-  initials: string
-  online?: boolean
-  size?: "sm" | "md" | "lg"
-  className?: string
-}
+import type { AvatarProps } from "./Avatar.types"
 
 const sizes = {
   sm: "h-10 w-10 text-xs",

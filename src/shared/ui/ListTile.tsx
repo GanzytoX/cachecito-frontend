@@ -2,24 +2,7 @@ import { cn } from "@/shared/lib/utils"
 import { IconChevronRight } from "@tabler/icons-react"
 import { Avatar } from "./Avatar"
 
-interface ListTileProps {
-  title: string
-  subtitle?: string
-  leading?: React.ReactNode
-  trailing?: React.ReactNode
-  unread?: boolean
-  initials?: string
-  online?: boolean
-  onClick?: () => void
-  variant?: "chat" | "contact" | "notification" | "settings"
-  icon?: React.ComponentType<{ size?: number; stroke?: number }>
-  iconColor?: string
-  iconBg?: string
-  time?: string
-  unreadCount?: number
-  className?: string
-  isActionable?: boolean
-}
+import type { ListTileProps } from "./ListTile.types"
 
 export function ListTile({
   title,
