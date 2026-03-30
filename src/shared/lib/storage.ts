@@ -1,4 +1,4 @@
-import type { Message, Chat } from "@/features/messages/types"
+import type { Message, Chat } from "@/entities/message/model/types"
 
 const CHATS_KEY = "cachecito_chats"
 const MESSAGES_KEY = "cachecito_messages"
