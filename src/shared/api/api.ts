@@ -1,6 +1,6 @@
 import type { Appointment } from "@/shared/lib/types"
 
-export const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://157.254.174.112:3000"
+export const BASE_URL = (import.meta.env.VITE_API_BASE_URL || "http://157.254.174.112:3000").replace(/\/$/, "")
 export const CURRENT_HUMAN_ID = 1
 
 /**

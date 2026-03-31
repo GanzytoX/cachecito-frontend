@@ -1,6 +1,6 @@
 import { io, Socket } from "socket.io-client";
 
-const SOCKET_URL = import.meta.env.VITE_API_BASE_URL || "http://157.254.174.112:3000";
+const SOCKET_URL = (import.meta.env.VITE_API_BASE_URL || "http://157.254.174.112:3000").replace(/\/$/, "");
 
 class SocketService {
   private socket: Socket | null = null;
