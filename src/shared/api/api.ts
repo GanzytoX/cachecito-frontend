@@ -1,73 +1,65 @@
-import type { Appointment, RequestResponse } from "@/shared/lib/types"
+import type { Appointment } from "@/shared/lib/types"
 
-export const BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://7jxvqht3-4000.usw3.devtunnels.ms"
+export const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://157.254.174.112:3000"
 export const CURRENT_HUMAN_ID = 1
 
 /**
- * Sends a text or voice command to the agent.
- * POST /request
+ * 1. Register User (POST /api/users)
+ * Before chatting, each user must exist in the DB.
  */
-export async function sendRequest(textCommand: string): Promise<RequestResponse> {
-  const response = await fetch(`${BASE_URL}/request`, {
+export async function registerUser(name: string, aiPersona: string): Promise<{ id: string }> {
+  const response = await fetch(`${BASE_URL}/api/users`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      humanId: CURRENT_HUMAN_ID,
-      textCommand,
-    }),
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, aiPersona }),
   })
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({ message: response.statusText }))
-    throw new Error(errorData.message || `Error sending request: ${response.statusText}`)
-  }
-
+  if (!response.ok) throw new Error("Failed to register user")
   return response.json()
 }
 
 /**
- * Gets the list of appointments pending confirmation.
- * GET /notifications?humanId={id}
+ * 2. List Users (GET /api/users)
+ * To choose a counterpart for negotiation.
  */
-export async function getNotifications(): Promise<Appointment[]> {
-  const response = await fetch(`${BASE_URL}/notifications?humanId=${CURRENT_HUMAN_ID}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-
-  if (!response.ok) {
-    throw new Error(`Error fetching notifications: ${response.statusText}`)
-  }
-
+export async function listUsers(): Promise<any[]> {
+  const response = await fetch(`${BASE_URL}/api/users`)
+  if (!response.ok) throw new Error("Failed to list users")
   return response.json()
 }
 
 /**
- * Confirms or rejects an appointment.
- * PATCH /confirm
+ * 3. Create or Open a Chat (POST /api/chats)
+ * Requires IDs of two users.
  */
-export async function confirmAppointment(
-  appointmentId: number,
-  status: "CONFIRMED" | "REJECTED"
-): Promise<{ success: boolean }> {
-  const response = await fetch(`${BASE_URL}/confirm`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      appointmentId,
-      status,
-    }),
+export async function createChat(userIds: string[]): Promise<{ id: string }> {
+  const response = await fetch(`${BASE_URL}/api/chats`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ userIds }),
   })
+  if (!response.ok) throw new Error("Failed to create chat")
+  return response.json()
+}
 
-  if (!response.ok) {
-    throw new Error(`Error confirming appointment: ${response.statusText}`)
-  }
+/**
+ * 5. Project Manifest (POST /api/chats/:id/manifest)
+ * Uploads initial document.
+ */
+export async function uploadManifest(chatId: string, content: string): Promise<any> {
+  const response = await fetch(`${BASE_URL}/api/chats/${chatId}/manifest`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ content }),
+  })
+  if (!response.ok) throw new Error("Failed to upload manifest")
+  return response.json()
+}
 
+/**
+ * NOTE: Legacy or for compatibility - checks for notifications
+ */
+export async function getNotifications(humanId: number): Promise<Appointment[]> {
+  const response = await fetch(`${BASE_URL}/notifications?humanId=${humanId}`)
+  if (!response.ok) throw new Error("Failed to fetch notifications")
   return response.json()
 }

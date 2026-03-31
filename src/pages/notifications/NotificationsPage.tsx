@@ -4,7 +4,8 @@ import { Tabs, TabsList, TabsTrigger } from "@/shared/ui/shadcn/tabs"
 import { PageHeader } from "@/shared/ui/PageHeader"
 import { ListTile } from "@/shared/ui/ListTile"
 import { EmptyState } from "@/shared/ui/EmptyState"
-import { confirmAppointment, CURRENT_HUMAN_ID, BASE_URL } from "@/shared/api/api"
+import { socketService } from "@/shared/api/socket"
+import { CURRENT_HUMAN_ID, BASE_URL } from "@/shared/api/api"
 import { fetcher } from "@/shared/api/fetcher"
 import type { Appointment } from "@/shared/lib/types"
 
@@ -22,10 +23,11 @@ export function NotificationsPage() {
       const filtered = appointments.filter((app: Appointment) => app.id !== id)
       mutate(filtered, false)
       
-      await confirmAppointment(id, status)
+      // Use socket instead of fetch
+      socketService.confirmAppointment(id, status)
       
-      // Revalidate to ensure server sync
-      mutate()
+      // Since it's a socket emit (fire and forget for now), we don't await a response
+      // but we can listen for updates if the protocol allowed it.
     } catch (error) {
       console.error(`Failed to ${status} appointment:`, error)
       mutate() // Rollback if error

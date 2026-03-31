@@ -2,8 +2,18 @@ import type { Message, Chat } from "@/entities/message/model/types"
 
 const CHATS_KEY = "cachecito_chats"
 const MESSAGES_KEY = "cachecito_messages"
+const USER_KEY = "cachecito_user"
 
 export const storage = {
+  getUser: (): { id: string, name: string, aiPersona: string } | null => {
+    const data = localStorage.getItem(USER_KEY)
+    return data ? JSON.parse(data) : null
+  },
+
+  saveUser: (user: { id: string, name: string, aiPersona: string }) => {
+    localStorage.setItem(USER_KEY, JSON.stringify(user))
+  },
+
   getChats: (): Chat[] => {
     const data = localStorage.getItem(CHATS_KEY)
     return data ? JSON.parse(data) : []
