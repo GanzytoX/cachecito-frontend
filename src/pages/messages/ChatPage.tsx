@@ -1,10 +1,11 @@
 import { useParams, useNavigate } from "react-router-dom"
 import { useRef, useEffect, useState } from "react"
-import { IconArrowLeft, IconSend2, IconPlus, IconMicrophone, IconLoader2, IconPhoto, IconPaperclip } from "@tabler/icons-react"
+import { IconArrowLeft, IconSend2, IconPlus, IconMicrophone, IconLoader2, IconPhoto, IconPaperclip, IconCircleCheck, IconUser, IconRobot, IconArrowRight, IconSparkles } from "@tabler/icons-react"
 import { cn } from "@/shared/lib/utils"
 import { Avatar } from "@/shared/ui/Avatar"
-import { sendRequest } from "@/shared/api/api"
+import { socketService } from "@/shared/api/socket"
 import { storage } from "@/shared/lib/storage"
+import { registerUser } from "@/shared/api/api"
 import type { Message } from "@/entities/message/model/types"
 
 export function ChatPage() {
@@ -17,8 +18,15 @@ export function ChatPage() {
   const [newMessage, setNewMessage] = useState("")
   const [isTyping, setIsTyping] = useState(false)
   const [attachMenuOpen, setAttachMenuOpen] = useState(false)
+  const [manifestInfo, setManifestInfo] = useState<any>(null)
+  
+  // Registration state
+  const [currentUser, setCurrentUser] = useState<{ id: string, name: string, aiPersona: string } | null>(() => storage.getUser())
+  const [isRegistering, setIsRegistering] = useState(false)
+  const [regName, setRegName] = useState("")
+  const [regPersona, setRegPersona] = useState("")
 
-  const isAgent = chatId?.startsWith("agent")
+  const isAgent = chatId?.startsWith("agent") || chatId === "ai-agent"
   
   const chat = (() => {
     if (!chatId) return undefined
@@ -30,6 +38,59 @@ export function ChatPage() {
     }
     return undefined
   })()
+
+  // Socket setup
+  useEffect(() => {
+    if (!chatId || !currentUser) return;
+
+    // Join the chat
+    socketService.joinChat(chatId);
+
+    // Listen for new messages
+    socketService.onNewMessage((data) => {
+      console.log("New message received via socket:", data);
+      const agentMsg: Message = {
+        id: data.id || Date.now().toString(),
+        chatId: chatId,
+        text: typeof data.content === 'string' ? data.content : JSON.stringify(data.content, null, 2),
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        fromMe: data.userId === currentUser.id,
+      };
+      
+      // Only add if it's not from me (me messages are added optimistically)
+      if (data.userId !== currentUser.id) {
+        setMessages(prev => [...prev, agentMsg]);
+      }
+    });
+
+    // Listen for agent status
+    socketService.onAgentStatus((data) => {
+      console.log("Agent status update:", data);
+      setIsTyping(data.status === "thinking" || data.status === "analyzing" || data.status === "typing");
+    });
+
+    // Listen for manifest updates
+    socketService.onManifestUpdated((data) => {
+      console.log("Manifest updated:", data);
+      setManifestInfo(data);
+      
+      // Add a system message or notification with manifest data summary
+      const summary = data?.summary || "Cambios en el manifiesto de acuerdos";
+      const systemMsg: Message = {
+        id: `manifest-${Date.now()}`,
+        chatId: chatId,
+        text: `📜 Acuerdo actualizado: ${summary}`,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        fromMe: false,
+        type: 'system'
+      };
+      setMessages(prev => [...prev, systemMsg]);
+    });
+
+    return () => {
+      // socketService.disconnect(); 
+    };
+  }, [chatId, currentUser, manifestInfo]);
 
   useEffect(() => {
     if (chatId) {
@@ -68,46 +129,137 @@ export function ChatPage() {
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [])
 
-  const handleSend = async () => {
-    if (!newMessage.trim()) return
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!regName.trim() || !regPersona.trim()) return
+    
+    setIsRegistering(true)
+    try {
+      const user = await registerUser(regName, regPersona)
+      const userData = { id: user.id, name: regName, aiPersona: regPersona }
+      storage.saveUser(userData)
+      setCurrentUser(userData)
+    } catch (error) {
+      console.error("Registration error:", error)
+      alert("Error al registrar usuario. Revisa la conexión con el servidor.")
+    } finally {
+      setIsRegistering(false)
+    }
+  }
+
+  const handleSend = () => {
+    if (!newMessage.trim() || !chatId || !currentUser) return
 
     const userMsg: Message = {
       id: Date.now().toString(),
-      chatId: chatId!,
+      chatId: chatId,
       text: newMessage,
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       fromMe: true
     }
 
     setMessages(prev => [...prev, userMsg])
-    const command = newMessage
+    socketService.sendMessage(chatId, currentUser.id, newMessage);
     setNewMessage("")
+  }
 
-    if (isAgent) {
-      setIsTyping(true)
-      try {
-        const result = await sendRequest(command)
-        const agentMsg: Message = {
-          id: (Date.now() + 1).toString(),
-          chatId: chatId!,
-          text: JSON.stringify(result, null, 2),
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          fromMe: false
-        }
-        setMessages(prev => [...prev, agentMsg])
-      } catch (error) {
-        const errorMsg: Message = {
-          id: (Date.now() + 1).toString(),
-          chatId: chatId!,
-          text: error instanceof Error ? error.message : "Connection error.",
-          time: "Now",
-          fromMe: false
-        }
-        setMessages(prev => [...prev, errorMsg])
-      } finally {
-        setIsTyping(false)
-      }
+  const renderMessage = (message: Message) => {
+    const isSystem = message.type === 'system';
+    
+    if (isSystem) {
+      return (
+        <div key={message.id} className="flex justify-center my-4 animate-in fade-in zoom-in-95 duration-500">
+          <div className="bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 px-4 py-2 rounded-2xl flex items-center gap-2 shadow-sm">
+            <IconCircleCheck size={16} stroke={2.5} />
+            <span className="text-[11px] font-bold uppercase tracking-wider">{message.text}</span>
+          </div>
+        </div>
+      );
     }
+
+    return (
+      <div
+        key={message.id}
+        className={cn("flex", message.fromMe ? "justify-end" : "justify-start")}
+      >
+        <div
+          className={cn(
+            "max-w-[85%] rounded-2xl px-4 py-2.5 shadow-sm transition-all animate-in fade-in slide-in-from-bottom-1 duration-300",
+            message.fromMe
+              ? "bg-primary text-primary-foreground rounded-br-md"
+              : "bg-card border border-border/50 text-foreground/80 rounded-bl-md"
+          )}
+        >
+          <p className="text-[13.5px] leading-relaxed">{message.text}</p>
+          <span className={cn("mt-1 block text-[10px] text-right", message.fromMe ? "text-primary-foreground/50" : "text-muted-foreground/30")}>
+            {message.time}
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  // Registration View
+  if (!currentUser) {
+    return (
+      <div className="flex flex-1 flex-col items-center justify-center p-6 bg-background space-y-8 animate-in fade-in zoom-in-95 duration-500">
+        <div className="flex flex-col items-center text-center space-y-3">
+          <div className="h-20 w-20 bg-primary/10 rounded-3xl flex items-center justify-center text-primary mb-2 shadow-2xl shadow-primary/10">
+            <IconSparkles size={40} stroke={1.5} />
+          </div>
+          <h1 className="text-2xl font-bold tracking-tight">Bienvenido a Cachecito</h1>
+          <p className="text-muted-foreground/60 max-w-xs text-sm">Regístrate para comenzar a negociar con agentes de IA en tiempo real.</p>
+        </div>
+
+        <form onSubmit={handleRegister} className="w-full max-w-sm space-y-5 bg-card/50 backdrop-blur-xl p-6 rounded-3xl border border-border/50 shadow-sm">
+          <div className="space-y-4">
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground/40 ml-1">Tu Nombre</label>
+              <div className="relative">
+                <IconUser className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground/30" size={18} />
+                <input
+                  required
+                  value={regName}
+                  onChange={e => setRegName(e.target.value)}
+                  className="w-full bg-background/50 border border-border/50 rounded-2xl h-12 pl-11 pr-4 text-sm focus:border-primary/30 outline-none transition-all"
+                  placeholder="Ej: Joaquin Holmes"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground/40 ml-1">AI Persona (Negotiation Style)</label>
+              <div className="relative">
+                <IconRobot className="absolute left-3.5 top-3.5 text-muted-foreground/30" size={18} />
+                <textarea
+                  required
+                  rows={3}
+                  value={regPersona}
+                  onChange={e => setRegPersona(e.target.value)}
+                  className="w-full bg-background/50 border border-border/50 rounded-2xl p-4 pl-11 text-sm focus:border-primary/30 outline-none transition-all resize-none"
+                  placeholder="Ej: Negociador agresivo orientado a resultados..."
+                />
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={isRegistering}
+            className="w-full bg-primary text-primary-foreground h-12 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-50"
+          >
+            {isRegistering ? (
+              <IconLoader2 className="animate-spin" size={20} />
+            ) : (
+              <>
+                Confirmar Registro
+                <IconArrowRight size={18} />
+              </>
+            )}
+          </button>
+        </form>
+      </div>
+    )
   }
 
   if (!chat) return <div className="flex flex-1 items-center justify-center">Chat not found</div>
@@ -136,28 +288,9 @@ export function ChatPage() {
 
       <div
         ref={scrollRef}
-        className="chat-pattern flex flex-1 flex-col gap-1.5 overflow-y-auto px-4 py-4"
+        className="chat-pattern flex flex-1 flex-col gap-1.5 overflow-y-auto px-4 py-4 scrollbar-hide"
       >
-        {messages.map((message) => (
-          <div
-            key={message.id}
-            className={cn("flex", message.fromMe ? "justify-end" : "justify-start")}
-          >
-            <div
-              className={cn(
-                "max-w-[85%] rounded-2xl px-4 py-2.5 shadow-sm transition-all",
-                message.fromMe
-                  ? "bg-primary text-primary-foreground rounded-br-md"
-                  : "bg-card border border-border/50 text-foreground/80 rounded-bl-md"
-              )}
-            >
-              <p className="text-[13.5px] leading-relaxed">{message.text}</p>
-              <span className={cn("mt-1 block text-[10px] text-right", message.fromMe ? "text-primary-foreground/50" : "text-muted-foreground/30")}>
-                {message.time}
-              </span>
-            </div>
-          </div>
-        ))}
+        {messages.map(renderMessage)}
         {isTyping && (
           <div className="flex justify-start">
             <div className="bg-card border border-border/50 px-5 py-3 rounded-2xl rounded-bl-md shadow-sm">
