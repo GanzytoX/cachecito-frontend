@@ -14,4 +14,5 @@ export interface Message {
   text: string
   time: string
   fromMe: boolean
+  type?: 'user' | 'system'
 }
