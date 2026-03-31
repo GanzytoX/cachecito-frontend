@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
-import { IconMessageOff, IconEdit, IconLoader2 } from "@tabler/icons-react"
+import { IconMessageOff, IconEdit, IconLoader2, IconArrowLeft, IconSparkles, IconUserSearch } from "@tabler/icons-react"
 import { PageHeader } from "@/shared/ui/PageHeader"
 import { ListTile } from "@/shared/ui/ListTile"
 import { EmptyState } from "@/shared/ui/EmptyState"
@@ -12,45 +12,48 @@ export function MessagesPage() {
   const navigate = useNavigate()
   const [isCreating, setIsCreating] = useState(false)
   const [activeChats, setActiveChats] = useState<Chat[]>([])
+  
+  // Selection state
+  const [isSelectingUser, setIsSelectingUser] = useState(false)
+  const [availableUsers, setAvailableUsers] = useState<any[]>([])
+  const [isLoadingUsers, setIsLoadingUsers] = useState(false)
 
   useEffect(() => {
     const storedChats = storage.getChats()
-    // Only show chats that have at least one message from user (to clean up empty sessions)
-    const validChats = storedChats.filter(c => {
-      const msgs = storage.getMessages(c.id)
-      return msgs.some(m => m.fromMe)
-    })
-    setActiveChats(validChats)
-    
-    if (validChats.length !== storedChats.length) {
-      localStorage.setItem("cachecito_chats", JSON.stringify(validChats))
-    }
+    // Show chats that exist in storage
+    setActiveChats(storedChats)
   }, [])
 
-  const handleNewChat = async () => {
+  const fetchUsersToSelect = async () => {
     const currentUser = storage.getUser()
     if (!currentUser) {
-      // If no user, navigate to chat page which will force registration
-      navigate("/messages/new-negotiation")
+      navigate("/messages/registration")
       return
     }
 
-    setIsCreating(true)
+    setIsLoadingUsers(true)
+    setIsSelectingUser(true)
     try {
-      // 1. Get available users
       const users = await listUsers()
-      
-      // 2. Filter out me
+      // Filter out me
       const others = users.filter(u => u.id !== currentUser.id)
-      
-      if (others.length === 0) {
-        alert("No hay otros usuarios registrados para negociar. Intenta de nuevo más tarde.")
-        return
-      }
+      setAvailableUsers(others)
+    } catch (error) {
+      console.error("Error fetching users:", error)
+      alert("No se pudo cargar la lista de usuarios.")
+      setIsSelectingUser(false)
+    } finally {
+      setIsLoadingUsers(false)
+    }
+  }
 
-      // 3. Pick the first available user as counterpart (for MVP)
-      const counterpart = others[0]
-      
+  const handleStartNegotiation = async (counterpart: any) => {
+    const currentUser = storage.getUser()
+    if (!currentUser) return
+
+    setIsCreating(true)
+    setIsSelectingUser(false)
+    try {
       // 4. Create chat session in backend
       const { id: chatId } = await createChat([currentUser.id, counterpart.id])
       
@@ -60,19 +63,66 @@ export function MessagesPage() {
         name: counterpart.name || "Counterpart",
         initials: (counterpart.name || "C").substring(0, 2).toUpperCase(),
         online: true,
-        lastMessage: "",
+        lastMessage: "Inicia la negociación...",
         time: "Now",
         unread: 0
       }
       
       storage.saveChat(newChat)
+      setActiveChats(prev => [newChat, ...prev.filter(c => c.id !== chatId)])
       navigate(`/messages/${chatId}`)
     } catch (error) {
       console.error("Error creating chat:", error)
-      alert("Error al iniciar chat. ¿El servidor está corriendo?")
+      alert("Error al iniciar chat de negociación.")
     } finally {
       setIsCreating(false)
     }
+  }
+
+  if (isSelectingUser) {
+    return (
+      <div className="flex flex-1 flex-col overflow-hidden bg-background animate-in fade-in slide-in-from-right-4 duration-300">
+        <header className="px-6 py-8 flex flex-col gap-2">
+          <button onClick={() => setIsSelectingUser(false)} className="h-10 w-10 flex items-center justify-center rounded-xl bg-muted/50 text-muted-foreground self-start mb-2 active:scale-95 transition-all">
+            <IconArrowLeft size={20} stroke={2} />
+          </button>
+          <h2 className="text-2xl font-bold tracking-tight">Nueva Negociación</h2>
+          <p className="text-muted-foreground/50 text-sm">Selecciona con quién quieres iniciar el acuerdo.</p>
+        </header>
+
+        <div className="flex-1 overflow-y-auto px-6 pb-12 space-y-3 scrollbar-hide">
+          {isLoadingUsers ? (
+            <div className="flex flex-col items-center justify-center py-20 gap-3 text-muted-foreground/30">
+              <IconLoader2 className="animate-spin" size={24} />
+              <span className="text-[11px] font-bold uppercase tracking-widest">Cargando negociadores...</span>
+            </div>
+          ) : availableUsers.length > 0 ? (
+            availableUsers.map((user) => (
+              <button 
+                key={user.id} 
+                onClick={() => handleStartNegotiation(user)}
+                className="w-full flex items-center gap-4 p-4 rounded-3xl bg-card/40 border border-border/50 hover:bg-primary/5 hover:border-primary/20 active:scale-[0.98] transition-all group"
+              >
+                <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary font-bold transition-all group-hover:bg-primary group-hover:text-primary-foreground">
+                  {(user.name || "U").substring(0, 2).toUpperCase()}
+                </div>
+                <div className="flex-1 text-left">
+                  <div className="font-bold text-[14px] leading-none mb-1">{user.name}</div>
+                  <div className="text-[11px] text-muted-foreground/60 truncate max-w-[200px]">{user.aiPersona || "Negociador estándar"}</div>
+                </div>
+                <IconSparkles size={18} className="text-primary/20 group-hover:text-primary transition-all" />
+              </button>
+            ))
+          ) : (
+            <EmptyState 
+              icon={IconUserSearch} 
+              title="Sin contrapartes" 
+              description="No hay otros usuarios registrados en el servidor actualmente." 
+            />
+          )}
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -81,15 +131,15 @@ export function MessagesPage() {
         title="Messages"
         searchPlaceholder="Search conversations..."
         actionIcon={isCreating ? IconLoader2 : IconEdit}
-        onActionClick={handleNewChat}
+        onActionClick={fetchUsersToSelect}
       />
 
       <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-hide">
         <div className="page-container mt-2 flex flex-col gap-2.5">
           {isCreating && (
-            <div className="flex items-center gap-3 p-4 bg-primary/5 rounded-2xl animate-pulse">
+            <div className="flex items-center gap-3 p-4 bg-primary/5 rounded-2xl animate-pulse mx-1">
               <IconLoader2 className="animate-spin text-primary" size={20} />
-              <span className="text-xs font-medium text-primary">Creating secure negotiation channel...</span>
+              <span className="text-xs font-medium text-primary">Abriendo canal de negociación...</span>
             </div>
           )}
 
@@ -117,7 +167,7 @@ export function MessagesPage() {
               <EmptyState
                 icon={IconMessageOff}
                 title="No recent chats"
-                description="Click the icon at the top right to start a new chat."
+                description="Presiona el icono de arriba para iniciar una negociación."
               />
             </div>
           )}
