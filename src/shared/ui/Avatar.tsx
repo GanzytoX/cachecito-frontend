@@ -18,14 +18,14 @@ export function Avatar({
     <div className={cn("relative shrink-0", className)}>
       <div
         className={cn(
-          "flex items-center justify-center rounded-full bg-primary/10 text-primary ring-1 ring-primary/10 font-semibold tracking-tight",
+          "flex items-center justify-center rounded-full bg-primary/10 font-semibold tracking-tight text-primary ring-1 ring-primary/10",
           sizes[size]
         )}
       >
         {initials}
       </div>
       {online && (
-        <div className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-background bg-success" />
+        <div className="absolute -right-0.5 -bottom-0.5 h-3.5 w-3.5 rounded-full border-2 border-background bg-success" />
       )}
     </div>
   )
