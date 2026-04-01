@@ -17,18 +17,12 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: root
           port: 22
-          key_path: key.pem
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            # 🔐 reconstruir clave privada desde base64
-            echo "${{ secrets.SSH_PRIVATE_KEY }}" | base64 -d > key.pem
-            chmod 600 key.pem
-
-            # ⚙️ cargar NVM + Node (IMPORTANTE)
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             nvm use 22
 
-            # 🚀 deploy
             cd ~/cachecito-frontend
             git fetch --all
             git reset --hard origin/main
