@@ -1,0 +1,8 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- L1 Cache - Top Data Lane (Primary/Active) -->
+  <path d="M6 9H26" stroke="#7D5F4D" stroke-width="4" stroke-linecap="round"/>
+  <!-- L2 Cache - Middle Data Lane (Medium Opacity) -->
+  <path d="M6 16H26" stroke="#7D5F4D" stroke-width="4" stroke-opacity="0.6" stroke-linecap="round"/>
+  <!-- L3 Cache - Bottom Data Lane (Low Opacity) -->
+  <path d="M6 23H26" stroke="#7D5F4D" stroke-width="4" stroke-opacity="0.3" stroke-linecap="round"/>
+</svg>

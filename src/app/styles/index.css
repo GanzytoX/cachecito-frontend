@@ -127,11 +127,11 @@
 
 /* Modern minimalist glass utilities */
 .glass-surface {
-  @apply bg-card backdrop-blur-2xl border border-foreground/10 shadow-[0_8px_32px_rgba(0,0,0,0.06)];
+  @apply bg-card backdrop-blur-2xl border border-border/40 shadow-xl shadow-primary/5;
 }
 
 .glass-nav {
-  @apply fixed bottom-8 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-md z-50 bg-card/70 backdrop-blur-2xl border border-foreground/10 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] pb-[env(safe-area-inset-bottom)];
+  @apply fixed bottom-8 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-md z-50 bg-card/70 backdrop-blur-2xl border border-border/40 rounded-3xl shadow-2xl shadow-primary/10 pb-[env(safe-area-inset-bottom)];
 }
 
 .page-container {
@@ -143,13 +143,19 @@ h1 {
   @apply text-3xl font-bold tracking-tight;
 }
 
-/* Chat wallpaper pattern */
-.chat-pattern {
+/* Cachecito AI wallpaper pattern */
+.cachecito-ai-pattern {
   background-color: var(--background);
-  background-image: radial-gradient(hsl(25 30% 45% / 0.15) 1.2px, transparent 1.2px);
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--primary), transparent 85%) 1.2px,
+    transparent 1.2px
+  );
   background-size: 24px 24px;
 }
 
-.dark .chat-pattern {
-  background-image: radial-gradient(hsl(25 25% 60% / 0.18) 1.2px, transparent 1.2px);
+.dark .cachecito-ai-pattern {
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--primary), transparent 82%) 1.2px,
+    transparent 1.2px
+  );
 }
