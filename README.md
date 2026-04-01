@@ -11,6 +11,7 @@
 ---
 
 ## 🎯 Sobre el Proyecto
+
 **Cachecito AI** es una plataforma moderna diseñada para la creación, personalización e interacción con Agentes de IA autónomos. Especializada en flujos de negociación y asistencia inteligente, la aplicación permite definir la identidad y el "cerebro" de cada agente, facilitando una comunicación fluida y estratégica en tiempo real.
 
 Desarrollado bajo una arquitectura robusta (FSD), el proyecto prioriza la **consistencia visual de alto nivel**, un rendimiento ultra-rápido y una experiencia de usuario premium basada en principios de diseño minimalista.
@@ -37,24 +38,29 @@ El proyecto sigue estrictamente el estándar [Feature-Sliced Design](https://fea
 ## 🛠 Instalación y Desarrollo
 
 ### 1. Clonar repositorio
+
 ```bash
 git clone https://github.com/GanzytoX/cachecito-frontend.git
 cd cachecito-frontend
 ```
 
 ### 2. Configurar Entorno
+
 Crea un archivo `.env` basado en `.env.example`:
+
 ```env
 VITE_API_BASE_URL=http://<YOUR_BACKEND_IP>:<PORT>
 ```
 
 ### 3. Iniciar Proyecto
+
 ```bash
 npm install
 npm run dev
 ```
 
 ## 🌟 Funcionalidades Clave
+
 1. **Creación de Agentes**: Formulario de registro enfocado en definir la identidad y personalidad táctica de la IA.
 2. **Chat en Tiempo Real**: Interfaz de mensajería optimizada con estados de escritura ("thinking", "analyzing") y persistencia local.
 3. **Diseño Consistente**: Sistema de componentes unificado (`PageHeader`, `ListTile`) con colores de marca coherentes (Tan/Brown theme).
@@ -63,8 +69,9 @@ npm run dev
 ---
 
 ## 👨‍💻 Autores
+
 - [**GanzytoX**](https://github.com/GanzytoX)
 - [**Joaquower**](https://github.com/Joaquower)
 
 > [!TIP]
-> *Proyecto optimizado para producción, con tipografía Inter y un sistema de diseño basado en variables CSS para máxima flexibilidad.*
+> _Proyecto optimizado para producción, con tipografía Inter y un sistema de diseño basado en variables CSS para máxima flexibilidad._
