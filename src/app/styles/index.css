@@ -131,7 +131,7 @@
 }
 
 .glass-nav {
-  @apply fixed bottom-8 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-md z-50 bg-card/70 backdrop-blur-2xl border border-border/40 rounded-3xl shadow-2xl shadow-primary/10 pb-[env(safe-area-inset-bottom)];
+  @apply fixed bottom-8 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-md z-50 bg-card/70 backdrop-blur-2xl border border-border/40 rounded-3xl shadow-lg pb-[env(safe-area-inset-bottom)];
 }
 
 .page-container {

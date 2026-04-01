@@ -31,7 +31,7 @@ export function BottomNav() {
               className={cn(
                 "relative mx-1 flex h-12 flex-1 items-center justify-center rounded-2xl transition-all duration-300 outline-none",
                 isActive
-                  ? "bg-primary/10 text-primary shadow-[0_0_20px_rgba(var(--primary),0.05)]"
+                  ? "bg-primary/10 text-primary"
                   : "text-muted-foreground/40 hover:bg-foreground/5 hover:text-foreground/70"
               )}
             >
