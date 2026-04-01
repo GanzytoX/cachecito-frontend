@@ -19,18 +19,6 @@ jobs:
           port: 22
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            # 🔐 reconstruir clave correctamente
-            echo "${{ secrets.SSH_PRIVATE_KEY }}" | base64 -d > /tmp/key
-            chmod 600 /tmp/key
-
-            # ⚠️ FORZAR SSH con esa key
-            export SSH_AUTH_SOCK=
-            export GIT_SSH_COMMAND="ssh -i /tmp/key -o StrictHostKeyChecking=no"
-
-            export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            nvm use 22
-
             cd ~/cachecito-frontend
             git fetch --all
             git reset --hard origin/main
